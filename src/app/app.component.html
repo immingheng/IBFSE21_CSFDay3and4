@@ -1,0 +1,80 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <span>My Todo</span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="content">
+  <div fxFlexFill fxLayout="row wrap" fxLayout.xs="column wrap" fxLayout.sm="column wrap" fxLayoutGap="15 px grid">
+    <form [formGroup]="form" (ngSubmit)="addtoDo()" #formDirective="ngForm">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Add Todo</mat-card-title>
+          <mat-card-title>Edit Todo</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field>
+            <input matInput formControlName="task" placeholder="Enter a task" />
+          </mat-form-field>
+          <div>
+            <label>Priority: &nbsp;</label>
+            <mat-radio-group arial-label="Select an options" formControlName="priority">
+              <mat-radio-button *ngFor="let p of priorities" value="{{ p }}">
+                {{ p }} &nbsp;</mat-radio-button>
+            </mat-radio-group>
+            <br />
+
+            <mat-hint *ngIf="priorityFormControl.invalid">
+              <p>Please select a task priority!</p>
+            </mat-hint>
+          </div>
+          <mat-form-field>
+            <input matInput [matDatepicker]="picker" formControlName="dueDate" [min]="today"
+              placeholder="Select Date" />
+            <mat-datepicker-toggle matSuffix [for]="picker">
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-datepicker-toggle>
+          </mat-form-field>
+          <div>
+            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+              Add
+            </button>
+            <button mat-raised-button color="primary" type="button" (click)="updateToDo()">
+              Update
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </form>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          TODO List:
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card>
+        <mat-card-content>
+          <span *ngFor="let t of todosValue; index as i">
+            <p>
+              <mat-card-actions>
+                <mat-checkbox (change)="checked(i)">
+                  <span [ngClass]="t.status && 'strikethrough' || 'null'">{{ t.task }} - {{ t.dueDate | date:
+                    "dd/MM/YYYY"
+                    }}
+                    - {{ t.priority }} &nbsp; </span>
+                </mat-checkbox>
+
+                <button mat-raised-button color="primary" type="button" (click)="editTodo(i)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-raised-button color="warn" type="button" (click)="deleteTodo(i)">
+                  <mat-icon>delete_forever</mat-icon>
+                </button>
+              </mat-card-actions>
+            </p>
+          </span>
+        </mat-card-content>
+      </mat-card>
+    </mat-card>
+  </div>
+</div>
